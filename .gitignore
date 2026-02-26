@@ -1,2 +1,16 @@
-mydata/*
+mydata/
 .env
+cv_testing/
+backend/node_modules/
+backend/package-lock.json
+backend/package.json
+backend/_pycache_
+Dataset_Creation/YOLO_MODEL_TRAINING_DATA_V1/
+frontend/node_modules/
+frontend/package-lock.json
+frontend/package.json
+frontend/_pycache_
+model_training_and_evaluation/dataset/
+model_training_and_evaluation/mealawe_annotation-3/
+model_training_and_evaluation/runs/detect/mealawe_project_vChecking/
+

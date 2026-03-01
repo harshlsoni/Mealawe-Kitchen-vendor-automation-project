@@ -4,7 +4,7 @@ cv_testing/
 backend/node_modules/
 backend/package-lock.json
 backend/package.json
-backend/_pycache_
+backend/__pycache__
 Dataset_Creation/YOLO_MODEL_TRAINING_DATA_V1/
 frontend/node_modules/
 frontend/package-lock.json

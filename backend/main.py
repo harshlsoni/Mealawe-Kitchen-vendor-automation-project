@@ -4,8 +4,8 @@ from matplotlib import pyplot as plt
 import cv2
 import os
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, HTTPException # type: ignore
+from fastapi.responses import JSONResponse # type: ignore
 import base64
 import cv2
 
@@ -27,48 +27,49 @@ def save_image(image, filename):
 
 app = FastAPI()
 
-@app.post("/verify-order")
-async def verify_order():
+@app.get("/verify-order/{order_id}")
+async def verify_order(order_id):
 
     try:
-        # 1️⃣ Fetch order data
-        order_data = Process_order.fetch_data()
+        # 1️ Fetch order data
+        order_data = Process_order.fetch_data(order_id)
 
         image_url = order_data["image_path"]
-        description = order_data["order_items_description"]
 
-        # 2️⃣ Predict detections
-        detections = Process_order.predict(utils.model_path,utils.image_path)
+        # 2️ Predict detections
+        detections = Process_order.predict(utils.model_path,image_url)
 
-        # 3️⃣ Parse detections
+        # 3️ Parse detections
         detections_dict = Process_order.parse_detections(detections)
 
-        # 4️⃣ Parse order text
-        order_items_dict = {'roti' : 2 , 'rice' : 1, 'dal' : 1}
+        # 4️ Parse order text
+        order_items_dict = Process_order.parse_order(order_data)
 
-        # 5️⃣ Compare
+        # 5️ Compare
         text_response = Process_order.compare_order_and_detection(
             order_items_dict,
             detections_dict
         )
 
-        # 6️⃣ Annotate Image
-        annotated_img = Process_order.bboxes(utils.image_path, detections)
+        # 6️ Annotate Image
+        annotated_img = Process_order.bboxes(image_url, detections)
 
         saved_path = save_image(annotated_img, "order_123.jpg")
 
         print(f"path : {saved_path}")
 
 
-        # 7️⃣ Convert image to base64
+        """
+        # 7️ Convert image to base64
         _, buffer = cv2.imencode(".jpg", annotated_img)
         img_base64 = base64.b64encode(buffer).decode("utf-8")
+        """
 
         return JSONResponse(
             content={
                 "verification_result": text_response,
-                'original_order_list' : order_items_dict,
-                "annotated_image_base64": img_base64
+                'original_order_list' : order_items_dict
+                #"annotated_image_base64": img_base64
             }
         )
 

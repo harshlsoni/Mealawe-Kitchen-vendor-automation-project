@@ -3,7 +3,7 @@ import random
 import shutil
 
 # --- CONFIG ---
-root_dir = r'E:\Mealawe-Kitchen-vendor-automation-project\Dataset_Creation\YOLO_MODEL_TRAINING_DATA_V1\transformed_data_for_training'
+root_dir = 'Enter your dataset dir'
 train_ratio = 0.8  # 80% for training
 
 # Define paths

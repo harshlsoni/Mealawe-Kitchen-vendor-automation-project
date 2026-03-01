@@ -3,9 +3,9 @@ import shutil
 import urllib.parse
 
 # --- CONFIGURATION ---
-label_dir = r'E:\Mealawe-Kitchen-vendor-automation-project\Dataset_Creation\YOLO_MODEL_TRAINING_DATA_V1\original_annotation_data\labels'
-source_images_dir = r'E:\Mealawe-Kitchen-vendor-automation-project\mydata\meal_images'
-output_dir = r'E:\Mealawe-Kitchen-vendor-automation-project\Dataset_Creation\YOLO_MODEL_TRAINING_DATA_V1\transformed_data_for_training'
+label_dir = r'-----------------------------------'
+source_images_dir = r'------------------------------'
+output_dir = r'-----------------------------------------'
 
 # Create new structure
 os.makedirs(os.path.join(output_dir, 'images'), exist_ok=True)

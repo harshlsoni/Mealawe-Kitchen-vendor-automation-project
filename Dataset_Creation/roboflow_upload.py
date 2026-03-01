@@ -2,7 +2,7 @@ import os
 from roboflow import Roboflow
 
 # Initialize Roboflow
-rf = Roboflow(api_key="xChTu2x7E9ULr1Vym0By")
+rf = Roboflow(api_key="api key")
 
 workspace_id = "abc-6ewki"
 project_id = "mealawe_annotation"
@@ -10,7 +10,7 @@ project_id = "mealawe_annotation"
 project = rf.workspace(workspace_id).project(project_id)
 
 # Folder containing your images
-IMAGE_FOLDER = r"E:\\Mealawe-Kitchen-vendor-automation-project\\mydata\\meal_images"
+IMAGE_FOLDER = r"--------------------------------"
 
 # Allowed image extensions
 VALID_EXTS = (".jpg", ".jpeg", ".png", ".bmp", ".webp")

@@ -3,27 +3,10 @@ import utils
 from matplotlib import pyplot as plt
 import cv2
 import os
-
 from fastapi import FastAPI, HTTPException # type: ignore
 from fastapi.responses import JSONResponse # type: ignore
 import base64
-import cv2
 
-def save_image(image, filename):
-    """
-    Save OpenCV image (numpy array) into results folder.
-    """
-
-    # 1️⃣ Create folder if not exists
-    os.makedirs("results", exist_ok=True)
-
-    # 2️⃣ Create full path
-    file_path = os.path.join("results", filename)
-
-    # 3️⃣ Save image
-    cv2.imwrite(file_path, image)
-
-    return file_path
 
 app = FastAPI()
 
@@ -54,7 +37,7 @@ async def verify_order(order_id):
         # 6️ Annotate Image
         annotated_img = Process_order.bboxes(image_url, detections)
 
-        saved_path = save_image(annotated_img, "order_123.jpg")
+        saved_path = Process_order.save_image(annotated_img, "order_123.jpg")
 
         print(f"path : {saved_path}")
 

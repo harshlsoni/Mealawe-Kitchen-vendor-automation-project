@@ -3,7 +3,7 @@ from ultralytics import YOLO
 import re
 import numpy as np
 import requests
-
+import os
 from collections import Counter
 
 model_path = "E:/Mealawe-Kitchen-vendor-automation-project/model_training_and_evaluation/runs/detect/Mealawe_model_version1/v023/weights/best.pt"
@@ -26,6 +26,23 @@ class Process_order:
         
         return order_details
     
+    def save_image(image, filename):
+        """
+        Save OpenCV image (numpy array) into results folder.
+        """
+
+        # 1️ Create folder if not exists
+        os.makedirs("results", exist_ok=True)
+
+        # 2️ Create full path
+        file_path = os.path.join("results", filename)
+
+        # 3️ Save image
+        cv2.imwrite(file_path, image)
+
+        return file_path
+
+
     def load_image_from_url(image_url):
         # Download image
         response = requests.get(image_url)

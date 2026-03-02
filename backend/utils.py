@@ -3,10 +3,13 @@ from ultralytics import YOLO
 import re
 import numpy as np
 import requests
+from matplotlib import pyplot as plt
 import os
 from collections import Counter
+import image_processor
 
-model_path = "E:/Mealawe-Kitchen-vendor-automation-project/model_training_and_evaluation/runs/detect/Mealawe_model_version1/v023/weights/best.pt"
+model = YOLO("best.pt")
+
 VALID_CLASSES = [
         'cucumber', 'curry', 'dal', 'onion', 'raita',
         'rice', 'chapati', 'sabzi', 'salad', 'sweet', 'tomato'
@@ -22,7 +25,7 @@ class Process_order:
 
         order_details = {'order_items_description' : "1 Veg Curry, Rice, Dal, Cut Salad",
 
-                         'image_path' : 'https://api.mealawe.com/images/fffbea48151f43b09fb8a65bbb673b3a.jpg'}
+                         'image_path' : 'https://api.mealawe.com/images/fdd13fa808f549298055cbd28568be10.jpg'}
         
         return order_details
     
@@ -44,7 +47,7 @@ class Process_order:
 
 
     def load_image_from_url(image_url):
-        # Download image
+        
         response = requests.get(image_url)
         response.raise_for_status()  # Raise error if failed
 
@@ -57,11 +60,22 @@ class Process_order:
         return image
 
         
-    def predict(model_path:str,image_url:str):
+    def predict(image_url:str):
 
-        model = YOLO(model_path)
         
         image = Process_order.load_image_from_url(image_url)
+
+        is_good, blur, contrast, texture, lighting_diff, bottom_variance = image_processor.check_image_quality(image)
+
+        if not is_good:
+            print("\nImage Quality:")
+            print("Blur:", blur)
+            print("Contrast:", contrast)
+            print("Texture:", texture)
+            print("Lighting Diff:", lighting_diff)
+            print("Bottom Noise:", bottom_variance)
+
+            image = image_processor.process_image(image)
 
         results = model.predict(source=image, conf=0.50, save=False)
 
@@ -85,7 +99,7 @@ class Process_order:
                     "bbox": [x1, y1, x2, y2]
                 })
 
-        return detections
+        return detections, image
         
     
     def parse_order(order_data):
@@ -169,7 +183,7 @@ class Process_order:
             "messages": response_messages
         } 
 
-    def bboxes(image_url:str , detections : list): # code to create bounding boxes over the image using the predictions from model
+    def bboxes(image , detections : list): # code to create bounding boxes over the image using the predictions from model
        
         """
         Draw bounding boxes on image.
@@ -183,7 +197,7 @@ class Process_order:
             annotated_image
         """
 
-        image = Process_order.load_image_from_url(image_url)
+        
         annotated_image = image.copy()
 
         for det in detections:

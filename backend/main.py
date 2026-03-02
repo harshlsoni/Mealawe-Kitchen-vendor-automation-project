@@ -16,7 +16,7 @@ async def verify_order(order_id):
         image_url = order_data["image_path"]
 
         # 2️ Predict detections
-        detections,image = Process_order.predict(utils.model_path,image_url)
+        detections,image = Process_order.predict(image_url)
 
         # 3️ Parse detections
         detections_dict = Process_order.parse_detections(detections)
@@ -31,10 +31,10 @@ async def verify_order(order_id):
         )
 
         # 6️ Annotate Image
-        annotated_img = Process_order.bboxes(image, detections)
+        # annotated_img = Process_order.bboxes(image, detections)
 
-        saved_path = Process_order.save_image(annotated_img, "order_123.jpg")
-        print(f"path : {saved_path}")
+        """saved_path = Process_order.save_image(annotated_img, "order_123.jpg")
+        print(f"path : {saved_path}")"""
 
 
 

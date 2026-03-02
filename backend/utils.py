@@ -5,6 +5,7 @@ import numpy as np
 import requests
 from matplotlib import pyplot as plt
 import os
+from urllib.parse import urlparse
 from collections import Counter
 import image_processor
 
@@ -21,7 +22,21 @@ class Process_order:
         
         pass
 
+
+    # url check function
+    def is_valid_url(url: str) -> bool:
+        try:
+            result = urlparse(url)
+            return all([result.scheme, result.netloc])
+        except:
+            return False
+    
     def fetch_data(order_id):
+        """
+        Function's goal : to fetch order details from api calls;
+        args:
+            order_id : id of order"""
+        
 
         order_details = {'order_items_description' : "1 Veg Curry, Rice, Dal, Cut Salad",
 
@@ -29,11 +44,13 @@ class Process_order:
         
         return order_details
     
-    def save_image(image, filename):
+    def save_image(image, filename:str):
         """
         Save OpenCV image (numpy array) into results folder.
         """
 
+        if not isinstance(image, np.ndarray):
+            return False
         # 1️ Create folder if not exists
         os.makedirs("results", exist_ok=True)
 
@@ -46,7 +63,9 @@ class Process_order:
         return file_path
 
 
-    def load_image_from_url(image_url):
+    def load_image_from_url(image_url:str):
+        if not Process_order.is_valid_url(image_url):
+            return False
         
         response = requests.get(image_url)
         response.raise_for_status()  # Raise error if failed
@@ -61,7 +80,12 @@ class Process_order:
 
         
     def predict(image_url:str):
+        """Function's goal : To predict classes from order image.
+        Args:
+            image_url : url of the input order image"""
 
+        if not Process_order.is_valid_url(image_url):
+            return False
         
         image = Process_order.load_image_from_url(image_url)
 
@@ -144,6 +168,7 @@ class Process_order:
         return result
 
     def parse_detections(detections):
+        """Parses model's output (detections) into a structured output"""
 
         filtered = [
             d["class"].lower()
@@ -153,7 +178,8 @@ class Process_order:
         return dict(Counter(filtered)) 
 
     def compare_order_and_detection(order_dict, detected_dict):
-
+        """Fn to compare order items list and detected items list"""
+        
         response_messages = []
         overall_status = "PASSED"
 
@@ -189,7 +215,7 @@ class Process_order:
         Draw bounding boxes on image.
 
         Args:
-            image url : url of original image
+            image  : original image (preprocessed)
             detections (list): List of dicts with keys:
                             'class', 'confidence', 'bbox'
 
@@ -197,6 +223,8 @@ class Process_order:
             annotated_image
         """
 
+        if not isinstance(image, np.ndarray):
+            return False
         
         annotated_image = image.copy()
 

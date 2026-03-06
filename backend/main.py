@@ -1,5 +1,4 @@
 from utils import Process_order
-import utils
 from fastapi import FastAPI, HTTPException # type: ignore
 from fastapi.responses import JSONResponse # type: ignore
 
@@ -20,7 +19,8 @@ async def verify_order(order_id):
 
         # 3️ Parse detections
         detections_dict = Process_order.parse_detections(detections)
-
+        detections_dict = Process_order.detect_salad(detections_dict)
+        
         # 4️ Parse order text
         order_items_dict = Process_order.parse_order(order_data)
 

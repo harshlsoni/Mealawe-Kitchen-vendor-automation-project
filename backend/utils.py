@@ -31,16 +31,16 @@ class Process_order:
         except:
             return False
     
-    def fetch_data(order_id):
+    def fetch_data(order_details):
         """
         Function's goal : to fetch order details from api calls;
         args:
             order_id : id of order"""
         
 
-        order_details = {'order_items_description' : "1 Veg Curry, Rice, Dal, Cut Salad",
+        order_details = {'order_items_description' : "3 chapati, 1 non-veg curry, fresh cut salad",
 
-                         'image_path' : 'https://api.mealawe.com/images/fdd13fa808f549298055cbd28568be10.jpg'}
+                         'image_path' : 'https://api.mealawe.com/images/7bafd54dde1648859f8e821231a92cf9.jpg'}
         
         return order_details
     
@@ -161,7 +161,7 @@ class Process_order:
             # Step 4: Match keyword
             for keyword in keywords:
                 if keyword in text_part:
-                    print(f"{text_part} : {keyword}")
+                    #print(f"{text_part} : {keyword}")
                     result[keyword] = result.get(keyword, 0) + quantity
                     break
 
@@ -274,3 +274,17 @@ class Process_order:
             )
 
         return annotated_image
+
+    def detect_salad(detections_dict):
+        salad_items = {"tomato", "cucumber", "onion"}
+
+        # find which salad ingredients are present
+        present_items = [item for item in salad_items if detections_dict.get(item, 0) > 0]
+
+        # if at least two ingredients are present
+        if len(present_items) >= 2:
+            detections_dict["salad"] = 1
+
+        detections_dict = {k: v for k, v in detections_dict.items() if k not in salad_items}
+
+        return detections_dict

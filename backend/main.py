@@ -1,18 +1,21 @@
 from utils import Process_order
 from fastapi import FastAPI, HTTPException # type: ignore
 from fastapi.responses import JSONResponse # type: ignore
-
+from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.get("/verify-order/{order_id}")
-async def verify_order(order_id):
+class Item(BaseModel):
+    order_items_description: str
+    image_path: str
+
+@app.get("/verify-order")
+async def verify_order(order_details:Item):
 
     try:
         # 1️ Fetch order data
-        order_data = Process_order.fetch_data(order_id)
-
-        image_url = order_data["image_path"]
+        image_url = order_details.image_path
+        order_list = order_details.order_items_description
 
         # 2️ Predict detections
         detections,image = Process_order.predict(image_url)
@@ -22,7 +25,7 @@ async def verify_order(order_id):
         detections_dict = Process_order.detect_salad(detections_dict)
         
         # 4️ Parse order text
-        order_items_dict = Process_order.parse_order(order_data)
+        order_items_dict = Process_order.parse_order(order_list)
 
         # 5️ Compare
         text_response = Process_order.compare_order_and_detection(

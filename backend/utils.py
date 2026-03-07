@@ -35,12 +35,7 @@ class Process_order:
         """
         Function's goal : to fetch order details from api calls;
         args:
-            order_id : id of order"""
-        
-
-        order_details = {'order_items_description' : "3 chapati, 1 non-veg curry, fresh cut salad",
-
-                         'image_path' : 'https://api.mealawe.com/images/7bafd54dde1648859f8e821231a92cf9.jpg'}
+            order_details : request body received from api call"""
         
         return order_details
     
@@ -126,13 +121,13 @@ class Process_order:
         return detections, image
         
     
-    def parse_order(order_data):
+    def parse_order(order_items_description):
         """
         Parses order description into structured dictionary
         using keyword matching instead of mapping.
         """
 
-        description = order_data.get("order_items_description", "").lower()
+        description = order_items_description.lower()
         result = {}
         #print(f"descp : {description}")
         # Define allowed keywords

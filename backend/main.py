@@ -9,7 +9,7 @@ class Item(BaseModel):
     order_items_description: str
     image_path: str
 
-@app.get("/verify-order")
+@app.post("/verify-order")
 async def verify_order(order_details:Item):
 
     try:
@@ -56,4 +56,5 @@ async def verify_order(order_details:Item):
         )
 
     except Exception as e:
+
         raise HTTPException(status_code=500, detail=str(e))

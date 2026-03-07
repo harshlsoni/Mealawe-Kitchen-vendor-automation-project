@@ -19,7 +19,7 @@ async def verify_order(order_details:Item):
 
         # 2️ Predict detections
         detections,image = Process_order.predict(image_url)
-
+        print("predictions made.")
         # 3️ Parse detections
         detections_dict = Process_order.parse_detections(detections)
         detections_dict = Process_order.detect_salad(detections_dict)
@@ -32,7 +32,7 @@ async def verify_order(order_details:Item):
             order_items_dict,
             detections_dict
         )
-
+        print("Task done..")
         # 6️ Annotate Image
         # annotated_img = Process_order.bboxes(image, detections)
 
@@ -56,5 +56,4 @@ async def verify_order(order_details:Item):
         )
 
     except Exception as e:
-
         raise HTTPException(status_code=500, detail=str(e))

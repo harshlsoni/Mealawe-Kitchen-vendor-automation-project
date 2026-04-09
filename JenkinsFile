@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/harshlsoni/Mealawe-Kitchen-Automation-Project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                bat 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                bat 'pytest'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                bat '''
+                cd E:\\Mealawe-Kitchen-Automation-Project
+                git pull origin main
+                pip install -r requirements.txt
+                '''
+            }
+        }
+    }
+}
